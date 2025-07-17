@@ -1,0 +1,24 @@
+# Virtual environment
+venv/
+
+# Model checkpoints (too large for git)
+checkpoints/
+*.pt
+*.pth
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Large data files
+data/shakespeare.txt
+data/simple_patterns.txt
+data/super_simple.txt
