@@ -92,7 +92,7 @@ class MultiHeadAttention(nn.Module):
         
         return attention_output, attention_weights
     
-    def forward(self, query, key, value, mask=None):
+    def forward(self, query, key, value, mask=None, return_attention=False):
         """
         Forward pass of multi-head attention.
         
@@ -101,10 +101,11 @@ class MultiHeadAttention(nn.Module):
             key: Key tensor [batch_size, seq_len, d_model]
             value: Value tensor [batch_size, seq_len, d_model]
             mask: Optional attention mask
+            return_attention: Whether to return attention weights
             
         Returns:
             output: [batch_size, seq_len, d_model]
-            attention_weights: [batch_size, n_heads, seq_len, seq_len]
+            attention_weights: [batch_size, n_heads, seq_len, seq_len] if return_attention=True
         """
         batch_size, seq_len, d_model = query.shape
         
@@ -126,7 +127,10 @@ class MultiHeadAttention(nn.Module):
         # Step 4: Final linear projection
         output = self.w_o(attention_output)
         
-        return output, attention_weights
+        if return_attention:
+            return output, attention_weights
+        else:
+            return output
 
 
 def create_causal_mask(seq_len: int, device: torch.device = None) -> torch.Tensor:
@@ -161,7 +165,7 @@ if __name__ == "__main__":
     mask = create_causal_mask(seq_len)
     
     # Forward pass
-    output, attn_weights = attention(x, x, x, mask)
+    output, attn_weights = attention(x, x, x, mask, return_attention=True)
     
     print(f"Input shape: {x.shape}")
     print(f"Output shape: {output.shape}")
